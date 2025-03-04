@@ -1,13 +1,14 @@
 <template>
   <div>
-    <slot />
+    <Header />
+    <div class="h-[630px]">
+      <slot />
+    </div>
+
+    <Nav />
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup></script>
 
-</script>
-
-<style>
-
-</style>
+<style></style>
