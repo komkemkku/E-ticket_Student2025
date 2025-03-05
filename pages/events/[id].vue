@@ -44,20 +44,30 @@
             {{ eventName }}
           </h1>
 
-                <!-- Event Details -->
-      <div class="mt-5 px-4">
-        <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">รายละเอียดงาน: {{ eventDetail }}</p>
-        <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">สถานที่: {{ eventAddress }}</p>
-        <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">เวลา: {{ eventTime }}</p>
-        <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">การแต่งกาย: {{ eventDress }}</p>
-      </div>
+          <!-- Event Details -->
+          <div class="mt-5 px-4">
+            <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">
+              รายละเอียดงาน: {{ eventDetail }}
+            </p>
+            <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">
+              สถานที่: {{ eventAddress }}
+            </p>
+            <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">
+              เวลา: {{ eventTime }}
+            </p>
+            <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">
+              การแต่งกาย: {{ eventDress }}
+            </p>
+          </div>
         </div>
       </div>
 
       <!-- Register Button -->
       <div class="flex justify-center max-sm:mt-16 max-lg:mt-32">
-        <button class="bg-gray-300 text-black font-medium max-sm:text-lg max-lg:text-xl py-2 px-6 rounded-lg">
-          ลงทะเบียน
+        <button
+          class="bg-gray-400 hover:bg-[#A73B24] text-white font-medium max-sm:text-lg max-lg:text-xl py-2 px-6 rounded-2xl"
+        >
+          <NuxtLink to="/register"> ลงทะเบียน</NuxtLink>
         </button>
       </div>
     </div>
@@ -70,10 +80,41 @@ const router = useRouter();
 const eventId = route.params.id;
 
 // ข้อมูล Ticket (รูป + ชื่อ)
-const eventData: Record<string, { image: string; name: string; detail:string; address:string; time:string; dress:string; }> = {
-  "1": { image: "/images/event/event01.png", name: "พิธีบายศรีสู่ขวัญ", detail: "งานบายศรีมข เชิญชวนมาเข้าจ้า มาเลย คัมมอน มาจ่ะๆๆ", address:"โรงชาย", time: "06:00 - 18:00", dress:"ชุดสุภาพ"},
-  "2": { image: "/images/event/event01.png", name: "พิธีบายศรีสู่ขวัญ", detail: "งานบายศรีมข เชิญชวนมาเข้าจ้า", address:"โรงชาย", time: "06:00 - 18:00", dress:"ชุดสุภาพ" },
-  "3": { image: "/images/event/event01.png", name: "พิธีบายศรีสู่ขวัญ", detail: "งานบายศรีมข เชิญชวนมาเข้าจ้า", address:"โรงชาย", time: "06:00 - 18:00", dress:"ชุดสุภาพ" },
+const eventData: Record<
+  string,
+  {
+    image: string;
+    name: string;
+    detail: string;
+    address: string;
+    time: string;
+    dress: string;
+  }
+> = {
+  "1": {
+    image: "/images/event/event01.png",
+    name: "พิธีบายศรีสู่ขวัญ",
+    detail: "งานบายศรีมข เชิญชวนมาเข้าจ้า มาเลย คัมมอน มาจ่ะๆๆ",
+    address: "โรงชาย",
+    time: "06:00 - 18:00",
+    dress: "ชุดสุภาพ",
+  },
+  "2": {
+    image: "/images/event/event01.png",
+    name: "พิธีบายศรีสู่ขวัญ",
+    detail: "งานบายศรีมข เชิญชวนมาเข้าจ้า",
+    address: "โรงชาย",
+    time: "06:00 - 18:00",
+    dress: "ชุดสุภาพ",
+  },
+  "3": {
+    image: "/images/event/event01.png",
+    name: "พิธีบายศรีสู่ขวัญ",
+    detail: "งานบายศรีมข เชิญชวนมาเข้าจ้า",
+    address: "โรงชาย",
+    time: "06:00 - 18:00",
+    dress: "ชุดสุภาพ",
+  },
 };
 
 // ดึงข้อมูล
