@@ -66,7 +66,7 @@ definePageMeta({
 const router = useRouter();
 
 // สร้างตัวแปรเก็บค่าฟอร์ม
-const form = ref({
+const form: { [key: string]: string } = {
   studentID: "",
   email: "",
   firstName: "",
@@ -75,7 +75,8 @@ const form = ref({
   faculty: "",
   medical: "",
   foodAllergies: "",
-});
+};
+
 
 // กำหนดฟิลด์ข้อมูลของฟอร์ม
 const formFields = [

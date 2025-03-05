@@ -118,12 +118,12 @@ const eventData: Record<
 };
 
 // ดึงข้อมูล
-const eventImage = eventData[eventId]?.image || "/images/default.jpg";
-const eventName = eventData[eventId]?.name || "Unknown Ticket";
-const eventDetail = eventData[eventId]?.detail || "Unknown";
-const eventAddress = eventData[eventId]?.address || "Unknown";
-const eventTime = eventData[eventId]?.time || "Unknown";
-const eventDress = eventData[eventId]?.dress || "Unknown";
+const eventImage = eventData[eventId.toString()]?.image || "/images/default.jpg";
+const eventName = eventData[eventId.toString()]?.name || "Unknown Ticket";
+const eventDetail = eventData[eventId.toString()]?.detail || "Unknown";
+const eventAddress = eventData[eventId.toString()]?.address || "Unknown";
+const eventTime = eventData[eventId.toString()]?.time || "Unknown";
+const eventDress = eventData[eventId.toString()]?.dress || "Unknown";
 
 const goBack = () => {
   router.back();
