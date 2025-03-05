@@ -11,14 +11,14 @@
           <div class="grid grid-cols-1 lg:grid-cols-1 gap-4 p-4">
             <!-- ใช้ v-for สร้างการ์ดแต่ละอีเวนต์ -->
             <div
-              v-for="event in events"
-              :key="event.id"
-              class=" h-auto max-sm:w-[330px] max-lg:w-[650px] rounded-lg mt-2"
+              v-for="ticket in tickets"
+              :key="ticket.id"
+              class=" h-auto max-sm:w-[330px] max-lg:w-[700px] rounded-lg mt-2"
             >
               <!-- คลิกเพื่อไปยังหน้ารายละเอียด -->
-              <NuxtLink :to="'/events/' + event.id">
+              <NuxtLink :to="'/ticket/' + ticket.id">
                 <img
-                  :src="event.image"
+                  :src="ticket.image"
                   alt="Event Image"
                   class="w-full h-full object-contain rounded-lg"
                 />
@@ -34,9 +34,9 @@
 <script setup lang="ts">
 
 // ข้อมูลจำลองของอีเวนต์
-const events = [
-  { id: 1, image: "/images/event/event01.png" },
-  { id: 2, image: "/images/event/event01.png" },
-  { id: 3, image: "/images/event/event01.png" },
+const tickets = [
+  { id: 1, image: "/images/ticket/ticket01.jpeg" },
+  { id: 2, image: "/images/ticket/ticket02.jpeg" },
+  { id: 3, image: "/images/ticket/ticket03.jpeg" },
 ];
 </script>

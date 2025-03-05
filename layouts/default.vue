@@ -1,7 +1,7 @@
 <template>
   <div>
     <Header />
-    <div class="h-[630px]">
+    <div class="max-sm:h-[610px] max-lg:h-[900px]">
       <slot />
     </div>
 

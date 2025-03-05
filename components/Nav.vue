@@ -8,13 +8,13 @@
         <NuxtLink
           to="/events/"
           class="group w-[35px] h-[35px] flex justify-center items-center rounded-md transition-colors duration-200 hover:bg-black/80 cursor-pointer"
-          :class="{ 'active-btn': $route.path === '/events/' }"
+          :class="{ 'active-btn': $route.path.includes('/events') }"
         >
           <svg
             class="w-6 h-6 transition-colors duration-200"
             :class="{
-              'text-white': $route.path === '/events/',
-              'text-black group-hover:text-white': $route.path !== '/events/',
+              'text-white': $route.path.includes('/events'),
+              'text-black group-hover:text-white': !$route.path.includes('/events'),
             }"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
@@ -62,15 +62,15 @@
         </NuxtLink>
 
         <NuxtLink
-          to="/ticket"
+          to="/ticket/"
           class="group w-[35px] h-[35px] flex justify-center items-center rounded-md transition-colors duration-200 hover:bg-black/80 cursor-pointer"
-          :class="{ 'active-btn': $route.path === '/ticket' }"
+  :class="{ 'active-btn': $route.path.includes('/ticket') }"
         >
           <svg
             class="w-6 h-6 transition-colors duration-200"
             :class="{
-              'text-white': $route.path === '/ticket',
-              'text-black group-hover:text-white': $route.path !== '/ticket',
+              'text-white': $route.path.includes('/ticket'),
+              'text-black group-hover:text-white': !$route.path.includes('/ticket'),
             }"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
