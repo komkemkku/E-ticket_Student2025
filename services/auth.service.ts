@@ -9,3 +9,10 @@ export const login = (data: { email: string; studentID: string }) => {
     });
   };
   
+  export const register = (payload: Register) => {
+    return client({
+        url: "/user/create",
+        method: "post",
+        data: payload,
+    })
+}

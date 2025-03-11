@@ -36,93 +36,111 @@
 
     <!-- ฟอร์มลงทะเบียน -->
     <div class="max-lg:mb-4 max-sm:mb-1">
-
       <div class="w-full max-sm:w-xs max-lg:w-lg max-lg:mt-10 max-sm:mt-4">
-          <label for="firstname" class="block text-black font-normal mb-1"> ชื่อจริง : </label>
-          <input
-            type="text"
-            id="firstname"
-            v-model="registers.firstname"
-            class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
-            required
-            placeholder="กรุณาใส่ชื่อ"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="lastname" class="block text-black font-normal mb-1"> นามสกุล : </label>
-          <input
-            type="text"
-            id="lastname"
-            v-model="registers.lastname"
-            class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none "
-            required
-            placeholder="กรุณาใส่นามสกุล"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="nickname" class="block text-black font-normal mb-1"> ชื่อเล่น : </label>
-          <input
-            type="text"
-            id="nickname"
-            v-model="registers.nickname"
-            class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
-            required
-            placeholder="กรุณาใส่ชื่อเล่น"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="email" class="block text-black font-normal mb-1"> อีเมล : </label>
-          <input
-            type="text"
-            id="email"
-            v-model="registers.email"
-            class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
-            required
-            placeholder="กรุณาใส่อีเมล"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="student_id" class="block text-black font-normal mb-1"> รหัสนักศึกษา : </label>
-          <input
-            type="text"
-            id="student_id"
-            v-model="registers.student_id"
-            class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
-            required
-            placeholder="กรุณาใส่รหัสนักศึกษา"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="faculty" class="block text-black font-normal mb-1"> คณะ : </label>
-          <input
-            type="text"
-            id="faculty"
-            v-model="registers.faculty"
-            class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
-            required
-            placeholder="กรุณาใส่คณะ"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="medical_condition" class="block text-black font-normal mb-1"> โรคประจำตัว : </label>
-          <input
-            type="text"
-            id="medical_condition"
-            v-model="registers.medical_condition"
-            class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
-            placeholder="กรุณาใส่ข้อมูล"
-          />
-        </div>
-        <div class="mt-4">
-          <label for="food_allergies" class="block text-black font-normal mb-1"> อาหารที่แพ้ : </label>
-          <input
-            type="text"
-            id="food_allergies"
-            v-model="registers.food_allergies"
-            class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
-            placeholder="กรุณาใส่ข้อมูล"
-          />
-        </div>
+        <label for="firstname" class="block text-black font-normal mb-1">
+          ชื่อจริง :
+        </label>
+        <input
+          type="text"
+          id="firstname"
+          v-model="registers.firstname"
+          class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
+          required
+          placeholder="กรุณาใส่ชื่อ"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="lastname" class="block text-black font-normal mb-1">
+          นามสกุล :
+        </label>
+        <input
+          type="text"
+          id="lastname"
+          v-model="registers.lastname"
+          class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
+          required
+          placeholder="กรุณาใส่นามสกุล"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="nickname" class="block text-black font-normal mb-1">
+          ชื่อเล่น :
+        </label>
+        <input
+          type="text"
+          id="nickname"
+          v-model="registers.nickname"
+          class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
+          required
+          placeholder="กรุณาใส่ชื่อเล่น"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="email" class="block text-black font-normal mb-1">
+          อีเมล :
+        </label>
+        <input
+          type="text"
+          id="email"
+          v-model="registers.email"
+          class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
+          required
+          placeholder="กรุณาใส่อีเมล"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="student_id" class="block text-black font-normal mb-1">
+          รหัสนักศึกษา :
+        </label>
+        <input
+          type="text"
+          id="student_id"
+          v-model="registers.student_id"
+          class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
+          required
+          placeholder="กรุณาใส่รหัสนักศึกษา"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="faculty" class="block text-black font-normal mb-1">
+          คณะ :
+        </label>
+        <input
+          type="text"
+          id="faculty"
+          v-model="registers.faculty"
+          class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
+          required
+          placeholder="กรุณาใส่คณะ"
+        />
+      </div>
+      <div class="mt-4">
+        <label
+          for="medical_condition"
+          class="block text-black font-normal mb-1"
+        >
+          โรคประจำตัว :
+        </label>
+        <input
+          type="text"
+          id="medical_condition"
+          v-model="registers.medical_condition"
+          class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
+          placeholder="กรุณาใส่ข้อมูล"
+        />
+      </div>
+      <div class="mt-4">
+        <label for="food_allergies" class="block text-black font-normal mb-1">
+          อาหารที่แพ้ :
+        </label>
+        <input
+          type="text"
+          id="food_allergies"
+          v-model="registers.food_allergies"
+          class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
+          placeholder="กรุณาใส่ข้อมูล"
+        />
+      </div>
     </div>
 
     <div class="flex justify-center">
@@ -130,11 +148,12 @@
       <button
         type="submit"
         class="max-lg:text-lg max-sm:text-base max-lg:px-10 max-sm:px-4 max-lg:py-2 max-sm:py-2 bg-gray-400 text-white rounded-2xl max-lg:mt-10 max-sm:mt-4 hover:bg-[#A73B24] transition cursor-pointer"
+        @click="register"
       >
         ลงทะเบียน
       </button>
     </div>
-    
+
     <div class="border-t mt-4">
       <p class="text-gray-800 text-lg flex justify-center mt-5">
         มีบัญชีแล้ว ?
@@ -147,9 +166,10 @@
 </template>
 
 <script setup lang="ts">
-import Swal from "sweetalert2";
-import type { Register } from "~/models/page.model";
-import services from "~/services";
+import * as Swal from "sweetalert2";
+import type { Register } from "@/models/page.model";
+import { definePageMeta } from "@/node_modules/nuxt/dist/pages/runtime/composables";
+import * as services from "@/services/auth.service";
 
 definePageMeta({
   layout: "auth",
@@ -188,30 +208,29 @@ const register = async () => {
   if (!confirmRegister) {
     return;
   }
-
-  await services.auth
+  await services
     .register(registers.value)
     .then((resp: any) => {
       console.log(resp);
 
       if (resp.status == 200) {
-        Swal.fire({
-          title: "ลงทะเบียนสำเร็จ!",
-          text: "คุณสามารถเข้าสู่ระบบได้แล้ว.",
-          icon: "success",
-          confirmButtonText: "ตกลง",
-        });
+        // Swal.fire({
+        //   title: "ลงทะเบียนสำเร็จ!",
+        //   text: "คุณสามารถเข้าสู่ระบบได้แล้ว.",
+        //   icon: "success",
+        //   confirmButtonText: "ตกลง",
+        // });
         router.push("/login");
       }
     })
     .catch((error: any) => {
       console.error(error);
-      Swal.fire({
-        title: "เกิดข้อผิดพลาด!",
-        text: "ไม่สามารถลงทะเบียนได้ กรุณาลองใหม่อีกครั้ง.",
-        icon: "error",
-        confirmButtonText: "ตกลง",
-      });
+      // Swal.fire({
+      //   title: "เกิดข้อผิดพลาด!",
+      //   text: "ไม่สามารถลงทะเบียนได้ กรุณาลองใหม่อีกครั้ง.",
+      //   icon: "error",
+      //   confirmButtonText: "ตกลง",
+      // });
       return;
     });
 };
