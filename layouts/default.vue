@@ -1,13 +1,14 @@
 <template>
   <div>
-    <slot />
+    <Header />
+    <div class="max-sm:h-[610px] max-lg:h-[900px]">
+      <slot />
+    </div>
+
+    <Nav />
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts" setup></script>
 
-</script>
-
-<style>
-
-</style>
+<style></style>
