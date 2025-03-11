@@ -1,4 +1,4 @@
-import { verify } from "~/composables/useAuth";
+import { verify } from "@/composables/useAuth";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
 
