@@ -82,14 +82,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import Swal from "sweetalert2";
 import { useRouter } from "vue-router";
-import * as auth from "@/services/auth.service";
 import { useIndexStore } from "@/stores/main";
+import type { Login } from "@/models/page.model";
+import * as auth from "@/services/auth.service";
+import { ref } from "vue";
 
 definePageMeta({
-  layout: "auth",
+  layout: "default",
+
 });
 
 const router = useRouter();
@@ -160,9 +162,8 @@ const submitForm = async () => {
       localStorage.setItem("staff_id", staff_id);
 
       // ✅ บันทึกลง Store
-      authStore.staffId = staff_id;
+      authStore.userId = staff_id;
       authStore.token = token;
-      authStore.user = user;
 
       // ✅ แจ้งเตือนสำเร็จ
       Swal.fire({
