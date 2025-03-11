@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col items-center bg-white p-6 max-lg:mt-20 max-sm:mt-24 font-serif"
+    class="flex flex-col items-center bg-white p-6 max-lg:mt-10 max-sm:mt-10 font-serif"
   >
     <!-- ปุ่มย้อนกลับ -->
     <button
@@ -27,28 +27,23 @@
     </button>
 
     <!-- หัวข้อ -->
-    <h1 class="text-3xl font-bold text-black">KhonKaen</h1>
-    <p class="text-lg font-semibold text-black">University</p>
+    <!-- <h1 class="text-3xl font-bold text-black">KhonKaen</h1>
+    <p class="text-lg font-semibold text-black">University</p> -->
 
-    <h2 class="text-center text-gray-800 font-medium">เข้าสู่ระบบ</h2>
+    <h2 class="text-center text-xl text-black font-semibold mt-3">Login</h2>
 
-    <!-- ฟอร์มล็อกอิน -->
     <form
       @submit.prevent="submitForm"
-      class="w-full max-sm:w-xs max-lg:w-lg max-lg:mt-10 max-sm:mt-4"
+      class="w-full max-w-md px-6 md:w-1/2 lg:w-1/3 mt-8 md:mt-12"
     >
-      <div
-        v-for="(field, index) in formFields"
-        :key="index"
-        class="max-lg:mb-6 max-sm:mb-3"
-      >
+      <div v-for="(field, index) in formFields" :key="index" class="mb-4">
         <label class="block text-black font-medium mb-1">
           {{ field.label }} :
         </label>
         <input
           v-model="form[field.model]"
           :type="field.type"
-          class="w-full px-4 py-2 rounded-2xl bg-gray-200 focus:outline-none"
+          class="w-full px-4 py-3 rounded-2xl bg-gray-200 focus:outline-none"
           :pattern="field.pattern"
           required
         />
@@ -58,20 +53,21 @@
         <!-- ปุ่มล็อกอิน -->
         <button
           type="submit"
-          class="max-lg:text-lg max-sm:text-base max-lg:px-10 max-sm:px-4 max-lg:py-2 max-sm:py-2 bg-gray-400 text-white rounded-2xl max-lg:mt-10 max-sm:mt-4 hover:bg-[#A73B24] transition cursor-pointer"
+          class="text-lg px-6 py-2 bg-[#A73B24] text-white rounded-2xl mt-6 md:mt-8 lg:mt-12 hover:bg-[#A73B24] transition cursor-pointer"
           :disabled="loading"
         >
           {{ loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ" }}
         </button>
       </div>
-      <hr class="mt-5" />
+
+      <hr class="mt-18" />
 
       <div>
-        <p class="text-gray-800 text-lg flex justify-center mt-5">
+        <p class="text-gray-800 text-m flex justify-center mt-8">
           ยังไม่มีบัญชี ?
           <NuxtLink
             to="/register"
-            class="hover:text-[#A73B24] cursor-pointer mx-3"
+            class="hover:text-[#A73B24] text-red-600 cursor-pointer mx-3"
           >
             ลงทะเบียน
           </NuxtLink>
@@ -90,8 +86,7 @@ import * as auth from "@/services/auth.service";
 import { ref } from "vue";
 
 definePageMeta({
-  layout: "default",
-
+  layout: "auth",
 });
 
 const router = useRouter();
