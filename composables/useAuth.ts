@@ -1,5 +1,5 @@
 import { useIndexStore } from "@/stores/main";
-import services from "@/services/API.service";
+import * as services from "@/services/API.service";
 
 const store = useIndexStore();
 

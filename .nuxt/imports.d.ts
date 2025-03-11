@@ -30,3 +30,5 @@ export { withCtx, withDirectives, withKeys, withMemo, withModifiers, withScopeId
 export { injectHead, useHead, useSeoMeta, useHeadSafe, useServerHead, useServerSeoMeta, useServerHeadSafe } from '@unhead/vue';
 export { verify } from '../composables/useAuth';
 export { useStatefulCookie } from '../composables/useStatefulCookie';
+export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';
+export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';
