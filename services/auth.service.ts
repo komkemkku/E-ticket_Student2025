@@ -1,4 +1,4 @@
-import type { Login } from "@/models/page.model"
+import type { Login, Register } from "@/models/page.model"
 import { client } from "./httpClient"
 
 export const login = (data: { email: string; studentID: string }) => {
