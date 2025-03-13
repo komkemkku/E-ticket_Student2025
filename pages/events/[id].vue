@@ -1,131 +1,199 @@
 <template>
   <div>
-    <div>
+    <!-- ปุ่ม Back -->
+    <div class="flex justify-start mt-5 ml-5">
       <button
         @click="goBack"
-        class="absolute left-14 max-sm:left-8 max-sm:mt-2 mt-1 text-2xl"
+        class="text-white bg-[#A73B24] opacity-80 px-4 py-2 rounded-lg shadow-xl transition hover:opacity-100"
       >
-        <svg
-          class="w-6 h-6 text-gray-800 dark:text-white"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 12h14M5 12l4-4m-4 4 4 4"
-          />
-        </svg>
+        Back
       </button>
-      <h1
-        class="font-serif font-bold max-sm:text-xl max-lg:text-2xl flex justify-center max-lg:mt-10 max-sm:mt-5"
+    </div>
+
+    <!-- Loading -->
+    <div v-if="loading" class="flex justify-center mt-10 text-lg text-gray-600">
+      <p>⏳ Loading event data...</p>
+    </div>
+
+    <!-- Error -->
+    <div
+      v-else-if="error"
+      class="flex justify-center mt-10 text-red-500 text-lg"
+    >
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- ข้อมูลกิจกรรม -->
+    <div v-else-if="eventData" class="flex justify-center mt-8">
+      <div
+        class="h-auto w-full max-w-2xl md:max-w-3xl lg:max-w-4xl bg-white rounded-xl p-8"
       >
-        Event {{ eventId }}
-      </h1>
-      <div class="flex justify-center mt-2">
         <img
-          :src="eventImage"
-          alt="Ticket Image"
-          class="mt-6 max-sm:w-[330px] max-lg:w-[700px] h-auto rounded-lg"
+          :src="
+            eventData.image ||
+            'https://shortrecap.co/wp-content/uploads/2020/05/Catcover_web.jpg'
+          "
+          class="w-full h-64 md:h-80 lg:h-[400px] object-cover rounded-xl shadow-md"
+          alt="Event Image"
         />
-      </div>
 
-      <div class="flex justify-center">
-        <div class="max-sm:w-[340px] max-lg:w-[730px]">
-          <h1
-            class="font-serif font-medium max-sm:text-xl max-lg:text-3xl text-center max-lg:mt-10 max-sm:mt-5 leading-relaxed overflow-y-auto"
-          >
-            {{ eventName }}
-          </h1>
+        <h2 class="text-center font-semibold text-3xl mt-6">
+          {{ eventData.name }}
+        </h2>
 
-          <!-- Event Details -->
-          <div class="mt-5 px-4">
-            <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">
-              รายละเอียดงาน: {{ eventDetail }}
-            </p>
-            <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">
-              สถานที่: {{ eventAddress }}
-            </p>
-            <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">
-              เวลา: {{ eventTime }}
-            </p>
-            <p class="max-sm:text-base max-lg:text-xl mt-2 leading-relaxed">
-              การแต่งกาย: {{ eventDress }}
-            </p>
-          </div>
+        <div class="mt-6 text-lg">
+          <p class="mt-4"><b>รายละเอียดงาน:</b> {{ eventData.description }}</p>
+          <p class="mt-4"><b>สถานที่:</b> {{ eventData.location }}</p>
+          <p class="mt-4"><b>การแต่งกาย:</b> {{ eventData.dress }}</p>
+          <p class="mt-4">
+            <b>เวลา:</b> {{ eventData.start_time }} - {{ eventData.end_time }}
+          </p>
+          <p class="mt-4">
+            <b>วันที่:</b> {{ eventData.start_date }} - {{ eventData.end_date }}
+          </p>
         </div>
-      </div>
 
-      <!-- Register Button -->
-      <div class="flex justify-center max-sm:mt-16 max-lg:mt-32">
-        <button
-          class="bg-gray-400 hover:bg-[#A73B24] text-white font-medium max-sm:text-lg max-lg:text-xl py-2 px-6 rounded-2xl"
-        >
-          <NuxtLink to="/register"> ลงทะเบียน</NuxtLink>
-        </button>
+        <!-- ปุ่มลงทะเบียน -->
+        <div class="flex justify-center mt-10">
+          <button
+            @click="register"
+            :disabled="registering"
+            class="font-semibold text-white bg-black w-44 h-12 rounded-3xl shadow-md transition-transform transform hover:scale-105"
+          >
+            {{ registering ? "กำลังลงทะเบียน..." : "ลงทะเบียน" }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import * as api from "@/services/API.service";
+import type { EventGetId } from "@/models/event.model";
+import { useIndexStore } from "@/stores/main";
+import { storeToRefs } from "pinia";
+import Swal from "sweetalert2";
+
 const route = useRoute();
 const router = useRouter();
-const eventId = route.params.id;
+const store = useIndexStore();
+const { userId } = storeToRefs(store);
 
-// ข้อมูล Ticket (รูป + ชื่อ)
-const eventData: Record<
-  string,
-  {
-    image: string;
-    name: string;
-    detail: string;
-    address: string;
-    time: string;
-    dress: string;
+const eventData = ref<EventGetId | null>(null);
+const loading = ref(true);
+const error = ref<string | null>(null);
+const registering = ref(false);
+
+const fetchEventData = async () => {
+  try {
+    loading.value = true;
+    error.value = null;
+
+    const eventId = Number(route.params.id);
+    if (!eventId) {
+      error.value = "❌ Invalid event ID.";
+      return;
+    }
+
+    console.log("📌 Fetching data for event ID:", eventId);
+    const response = await api.getEventsById(eventId);
+
+    if (!response.data || !response.data.data) {
+      throw new Error("❌ No event data found.");
+    }
+
+    eventData.value = response.data.data;
+    console.log("✅ Event Data Loaded:", eventData.value);
+  } catch (err) {
+    error.value = "❌ Failed to load event data.";
+    console.error("❌ Error fetching event:", err);
+  } finally {
+    loading.value = false;
   }
-> = {
-  "1": {
-    image: "/images/event/event01.png",
-    name: "พิธีบายศรีสู่ขวัญ",
-    detail: "งานบายศรีมข เชิญชวนมาเข้าจ้า มาเลย คัมมอน มาจ่ะๆๆ",
-    address: "โรงชาย",
-    time: "06:00 - 18:00",
-    dress: "ชุดสุภาพ",
-  },
-  "2": {
-    image: "/images/event/event01.png",
-    name: "พิธีบายศรีสู่ขวัญ",
-    detail: "งานบายศรีมข เชิญชวนมาเข้าจ้า",
-    address: "โรงชาย",
-    time: "06:00 - 18:00",
-    dress: "ชุดสุภาพ",
-  },
-  "3": {
-    image: "/images/event/event01.png",
-    name: "พิธีบายศรีสู่ขวัญ",
-    detail: "งานบายศรีมข เชิญชวนมาเข้าจ้า",
-    address: "โรงชาย",
-    time: "06:00 - 18:00",
-    dress: "ชุดสุภาพ",
-  },
 };
 
-// ดึงข้อมูล
-const eventImage = eventData[eventId.toString()]?.image || "/images/default.jpg";
-const eventName = eventData[eventId.toString()]?.name || "Unknown Ticket";
-const eventDetail = eventData[eventId.toString()]?.detail || "Unknown";
-const eventAddress = eventData[eventId.toString()]?.address || "Unknown";
-const eventTime = eventData[eventId.toString()]?.time || "Unknown";
-const eventDress = eventData[eventId.toString()]?.dress || "Unknown";
+const fetchUserInfo = async () => {
+  try {
+    console.log("📌 Fetching User Info...");
+    const response = await api.getUserInfo();
+    if (!response.data || !response.data.data) {
+      throw new Error("❌ ไม่พบข้อมูลผู้ใช้");
+    }
+
+    store.userId = response.data.data.id;
+    console.log("✅ User Info Loaded:", response.data.data);
+  } catch (err) {
+    console.error("❌ Error fetching user info:", err);
+    throw new Error("ไม่สามารถดึงข้อมูลผู้ใช้ได้ กรุณาลองใหม่!");
+  }
+};
+
+const register = async () => {
+  try {
+    registering.value = true;
+    console.log("📌 เริ่มทำการลงทะเบียน...");
+
+    await fetchUserInfo();
+
+    if (!userId.value) {
+      throw new Error("❌ ไม่พบข้อมูลผู้ใช้ กรุณาเข้าสู่ระบบก่อนลงทะเบียน!");
+    }
+
+    const eventId = Number(route.params.id);
+    if (!eventId) {
+      throw new Error("❌ ไม่พบข้อมูลอีเวนต์ กรุณาลองใหม่อีกครั้ง!");
+    }
+
+    const ticketData = {
+      user_id: userId.value,
+      event_id: eventId,
+    };
+
+    console.log("📌 ส่งข้อมูลไปยัง API:", ticketData);
+
+    const response = await api.createTicket(ticketData);
+    console.log("📌 API Response:", response.data);
+
+    // ✅ ตรวจสอบค่าจาก API Response
+    const ticketId = response.data?.tick_id;
+    const qrCode = response.data?.qr_code;
+
+    if (!ticketId && !qrCode) {
+      console.error("❌ API ไม่คืนค่า ticket_id หรือ qr_code!", response.data);
+      throw new Error("❌ ไม่สามารถสร้างตั๋วได้ กรุณาลองใหม่!");
+    }
+
+    console.log("✅ ลงทะเบียนสำเร็จ!", { ticketId, qrCode });
+
+    await Swal.fire({
+      title: "✅ ลงทะเบียนสำเร็จ!",
+      text: "คุณสามารถตรวจสอบตั๋วของคุณได้ที่หน้า My Tickets",
+      icon: "success",
+      confirmButtonText: "ดูตั๋วของฉัน",
+    });
+
+    router.push(`/ticket/${ticketId}`);
+  } catch (err) {
+    console.error("❌ Error Registering:", err);
+
+    await Swal.fire({
+      title: "ลงทะเบียนไม่สำเร็จ",
+      text: "นักศึกษาทำการลงทะเบียนแล้ว",
+      icon: "error",
+    });
+  } finally {
+    registering.value = false;
+  }
+};
+
+onMounted(fetchEventData);
 
 const goBack = () => {
-  router.back();
+  router.push("/events");
 };
 </script>
+
+<style></style>

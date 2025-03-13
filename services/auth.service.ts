@@ -1,7 +1,7 @@
 import type { Login, Register } from "@/models/page.model"
 import { client } from "./httpClient"
 
-export const login = (data: { email: string; studentID: string }) => {
+export const login = (data: { email: string; student_id: string }) => {
     return client({
       url: "/user/login",
       method: "post",

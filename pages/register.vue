@@ -1,12 +1,17 @@
 <template>
+  <!-- ปุ่มย้อนกลับ -->
+  <div class="flex justify-start ml-5 mt-5">
+    <button
+      @click="goBack"
+      class="text-white bg-[#A73B24] opacity-80 px-3 py-1 rounded-lg shadow-xl"
+    >
+      Back
+    </button>
+  </div>
   <div
     class="flex flex-col items-center bg-white p-6 max-lg:mt-8 max-sm:mt-6 font-serif"
   >
-    <!-- ปุ่มย้อนกลับ -->
-    <button
-      @click="goBack"
-      class="absolute left-14 max-sm:left-8 max-sm:mt-2 mt-1 text-2xl"
-    >
+    <button>
       <svg
         class="w-6 h-6 text-gray-800 dark:text-white"
         aria-hidden="true"
@@ -30,10 +35,10 @@
     <!-- <h1 class="text-3xl font-bold text-black">KhonKaen</h1>
     <p class="text-lg font-semibold text-black">University</p> -->
 
-    <h2 class="text-center text-xl text-black font-semibold mt-5">Register</h2>
+    <h2 class="text-center text-xl text-black font-semibold">Register</h2>
 
     <!-- ฟอร์มลงทะเบียน -->
-    <div class="max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto px-6">
+    <div class="max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto px-10">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         <div>
           <label for="firstname" class="block text-black font-normal mb-1">
@@ -149,7 +154,7 @@
         </div>
       </div>
 
-      <div class="flex justify-center mt-6">
+      <div class="flex justify-center mt-14">
         <!-- ปุ่มลงทะเบียน -->
         <button
           type="submit"
@@ -160,7 +165,7 @@
         </button>
       </div>
 
-      <div class="border-t mt-6">
+      <div class="border-t mt-14">
         <p class="text-gray-800 text-m flex justify-center mt-5">
           มีบัญชีแล้ว ?
           <NuxtLink
@@ -176,7 +181,7 @@
 </template>
 
 <script setup lang="ts">
-import * as Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import type { Register } from "@/models/page.model";
 import * as services from "@/services/auth.service";
 
@@ -198,49 +203,63 @@ const registers = ref<Register>({
 
 // ฟังก์ชันย้อนกลับ
 const goBack = () => {
-  router.back();
+  router.push("/");
 };
 
 const register = async () => {
-  // ตรวจสอบรูปแบบของรหัสนักศึกษา (ต้องเป็น 9 ตัวเลข + "-" + 1 ตัวเลข)
+  // ✅ ตรวจสอบรูปแบบของรหัสนักศึกษา (9 ตัวเลข + "-" + 1 ตัวเลข)
   const studentIdPattern = /^\d{9}-\d$/;
   if (!studentIdPattern.test(registers.value.student_id)) {
-    alert("❌ กรุณากรอกรหัสนักศึกษาให้ถูกต้อง เช่น 643120391-7");
-    return;
-  }
-
-  // Popup ยืนยันก่อนลงทะเบียน
-  const confirmRegister = confirm(
-    `⚠️ กรุณาตรวจสอบรหัสนักศึกษาให้แน่ใจ\n\nรหัสของคุณ: ${registers.value.student_id}\n\n❗️ เมื่อกดลงทะเบียนแล้ว **ไม่สามารถแก้ไขได้** ❗️\n\nคุณแน่ใจหรือไม่?`
-  );
-
-  if (!confirmRegister) {
-    return;
-  }
-  await services
-    .register(registers.value)
-    .then((resp: any) => {
-      console.log(resp);
-
-      if (resp.status == 200) {
-        // Swal.fire({
-        //   title: "ลงทะเบียนสำเร็จ!",
-        //   text: "คุณสามารถเข้าสู่ระบบได้แล้ว.",
-        //   icon: "success",
-        //   confirmButtonText: "ตกลง",
-        // });
-        router.push("/login");
-      }
-    })
-    .catch((error: any) => {
-      console.error(error);
-      // Swal.fire({
-      //   title: "เกิดข้อผิดพลาด!",
-      //   text: "ไม่สามารถลงทะเบียนได้ กรุณาลองใหม่อีกครั้ง.",
-      //   icon: "error",
-      //   confirmButtonText: "ตกลง",
-      // });
-      return;
+    Swal.fire({
+      title: "❌ รหัสนักศึกษาไม่ถูกต้อง!",
+      text: "กรุณากรอกรหัสนักศึกษาให้ถูกต้อง เช่น 643120391-7",
+      icon: "warning",
+      confirmButtonText: "ตกลง",
     });
+    return;
+  }
+
+  // ✅ Popup ยืนยันก่อนลงทะเบียน
+  const confirmRegister = await Swal.fire({
+    title: "⚠️ กรุณาตรวจสอบรหัสนักศึกษา",
+    html: `รหัสนักศึกษาของคุณ: <b>${registers.value.student_id}</b> <br><br>❗️ <b>เมื่อกดลงทะเบียนแล้ว <u>ไม่สามารถแก้ไขได้</u></b> ❗️`,
+    icon: "info",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  });
+
+  if (!confirmRegister.isConfirmed) {
+    return;
+  }
+
+  // ✅ ดำเนินการลงทะเบียน
+  try {
+    const resp = await services.register(registers.value);
+    console.log(resp);
+
+    if (resp.status == 200) {
+      Swal.fire({
+        title: "🎉 ลงทะเบียนสำเร็จ!",
+        text: "คุณสามารถเข้าสู่ระบบได้แล้ว.",
+        icon: "success",
+        confirmButtonText: "เข้าสู่ระบบ",
+      }).then(() => {
+        router.push("/login");
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: "❌ เกิดข้อผิดพลาด!",
+      text: "ไม่สามารถลงทะเบียนได้ กรุณาลองใหม่อีกครั้ง.",
+      icon: "error",
+      confirmButtonText: "ตกลง",
+    });
+  }
 };
 </script>
+
+<style scoped>
+/* ปรับสไตล์เพิ่มเติมหากจำเป็น */
+</style>

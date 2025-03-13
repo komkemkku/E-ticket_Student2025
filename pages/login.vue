@@ -1,6 +1,15 @@
 <template>
+  <!-- ปุ่มย้อนกลับ -->
+  <div class="flex justify-start ml-5 mt-5">
+    <button
+      @click="goBack"
+      class="text-white bg-[#A73B24] opacity-80 px-3 py-1 rounded-lg shadow-xl"
+    >
+      Back
+    </button>
+  </div>
   <div
-    class="flex flex-col items-center bg-white p-6 max-lg:mt-10 max-sm:mt-10 font-serif"
+    class="flex flex-col items-center bg-white p-6 max-lg:mt-8 max-sm:mt-8 font-serif"
   >
     <!-- ปุ่มย้อนกลับ -->
     <button
@@ -83,7 +92,9 @@ import { useRouter } from "vue-router";
 import { useIndexStore } from "@/stores/main";
 import type { Login } from "@/models/page.model";
 import * as auth from "@/services/auth.service";
+import * as api from "@/services/API.service";
 import { ref } from "vue";
+// import { useCookie } from "#app";
 
 definePageMeta({
   layout: "auth",
@@ -91,15 +102,15 @@ definePageMeta({
 
 const router = useRouter();
 const authStore = useIndexStore();
+const store = useIndexStore();
 const loading = ref(false);
 
-// สร้างตัวแปรเก็บค่าฟอร์ม
-const form: { [key: string]: string } = {
-  studentID: "",
+const form = ref<Login>({
   email: "",
-};
+  student_id: "",
+});
 
-// กำหนดฟิลด์ข้อมูลของฟอร์ม
+// ✅ ฟิลด์ข้อมูลของฟอร์ม
 const formFields = [
   {
     label: "KKU Mail",
@@ -109,69 +120,52 @@ const formFields = [
   },
   {
     label: "Student ID",
-    model: "studentID",
+    model: "student_id",
     type: "text",
-    pattern: "\\d{9}-\\d{1}",
   },
 ];
 
-// ✅ ฟังก์ชันย้อนกลับ
 const goBack = () => {
-  router.back();
+  router.push("/");
 };
 
 // ✅ ฟังก์ชันล็อกอิน
 const submitForm = async () => {
   try {
-    if (!form.email.endsWith("@kku.ac.th")) {
+    if (!form.value.email.endsWith("@kkumail.com")) {
       Swal.fire(
         "⚠️ ข้อผิดพลาด",
-        "กรุณาใช้ KKU Mail ที่ถูกต้อง (@kku.ac.th)",
-        "warning"
-      );
-      return;
-    }
-    if (!/^\d{9}-\d{1}$/.test(form.studentID)) {
-      Swal.fire(
-        "⚠️ ข้อผิดพลาด",
-        "รหัสนักศึกษาต้องเป็นรูปแบบ XXXXXXXX-X",
+        "กรุณาใช้ KKU Mail ที่ถูกต้อง (@kkumail.com)",
         "warning"
       );
       return;
     }
 
     loading.value = true;
-    console.log("📌 Sending Login Request:", form);
+    console.log("📌 Sending Login Request:", form.value);
 
-    // ✅ เรียก API Login
     const response = await auth.login({
-      email: form.email,
-      studentID: form.studentID,
+      email: form.value.email,
+      student_id: form.value.student_id,
     });
 
-    if (response.data.success) {
-      const { token, staff_id, user } = response.data;
+    if (response.data.status === 200) {
+      const { token } = response.data;
 
-      // ✅ บันทึก Token ลง LocalStorage
+      const authToken = useCookie("token");
+      authToken.value = token;
+
       localStorage.setItem("token", token);
-      localStorage.setItem("staff_id", staff_id);
 
-      // ✅ บันทึกลง Store
-      authStore.userId = staff_id;
-      authStore.token = token;
-
-      // ✅ แจ้งเตือนสำเร็จ
       Swal.fire({
         title: "✅ ล็อกอินสำเร็จ!",
-        text: "กำลังนำคุณไปยังหน้า Dashboard",
         icon: "success",
         timer: 2000,
         showConfirmButton: false,
       });
 
-      // ✅ นำไปที่หน้า Dashboard
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/events");
       }, 2000);
     } else {
       throw new Error(response.data.message || "เกิดข้อผิดพลาด");
@@ -186,6 +180,25 @@ const submitForm = async () => {
     });
   } finally {
     loading.value = false;
+  }
+};
+
+const getUserInfo = async () => {
+  try {
+    console.log("📌 Fetching user info...");
+
+    // 🔹 3. **เรียก API ดึงข้อมูลผู้ใช้**
+    const resp = await api.getUserInfo();
+    const data = resp.data.data;
+
+    if (data && data.id) {
+      store.userId = data.id;
+      console.log("✅ User ID Loaded:", data.id);
+    } else {
+      throw new Error("ไม่พบข้อมูลผู้ใช้");
+    }
+  } catch (error) {
+    console.error("❌ Error fetching user info:", error);
   }
 };
 </script>
